@@ -8,7 +8,13 @@ const PLUGIN_SDK = '@spinnaker/pluginsdk';
 const PEER_DEPS = '@spinnaker/pluginsdk-peerdeps';
 
 function getLatestPackageVersion(pkg) {
-  const versionsString = execSync(`npm info ${pkg} versions`).toString();
+  // Sanitize package name to prevent command injection
+  // Valid npm package names can only contain lowercase letters, numbers, dots, hyphens, underscores, and forward slashes
+  if (!/^[@a-z0-9._\-\/]+$/i.test(pkg)) {
+    throw new Error(`Invalid package name: ${pkg}`);
+  }
+  
+  const versionsString = execSync(`npm info ${JSON.stringify(pkg)} versions`).toString();
   return JSON.parse(versionsString.replace(/'/g, '"')).pop();
 }
 
