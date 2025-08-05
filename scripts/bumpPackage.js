@@ -58,7 +58,7 @@ packages
     const yarnUpgradeCmd = `yarn --cwd ${package} upgrade --latest ${packageToUpgrade}`;
     console.log(yarnUpgradeCmd);
     console.log();
-    console.log(execSync(yarnUpgradeCmd).toString());
+    console.log(execSync('yarn', ['--cwd', package, 'upgrade', '--latest', packageToUpgrade]).toString());
     console.log('===============================');
     console.log();
   });
