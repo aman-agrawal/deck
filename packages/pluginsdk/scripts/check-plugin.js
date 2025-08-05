@@ -44,26 +44,11 @@ function checkPlugin(options) {
    * }}
    */
   function reporter(message, ok, resolution = {}) {
-    // Validate and sanitize command to prevent command injection
-    const validateCommand = (command) => {
-      if (typeof command !== 'string') {
-        throw new Error('Command must be a string');
-      }
-      // Basic sanitization - only allow alphanumeric, spaces, dashes, dots, slashes, and common safe characters
-      if (!/^[a-zA-Z0-9\s\-\.\/_@:=]*$/.test(command)) {
-        throw new Error('Command contains potentially unsafe characters');
-      }
-      return command;
-    };
-
     const fixer = resolution.fixer || (resolution.command && (() => {
-      try {
-        const sanitizedCommand = validateCommand(resolution.command);
-        return execSync(sanitizedCommand);
-      } catch (error) {
-        console.error(`Command validation failed: ${error.message}`);
-        throw error;
-      }
+      // Avoid child_process execution from user-controllable input
+      // Instead, log the command that should be run manually
+      console.log(`Manual intervention required. Please run: ${resolution.command}`);
+      return null;
     }));
 
     if (ok === true) {
